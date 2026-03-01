@@ -27,3 +27,5 @@ deploying-ai-env
 *.jsonl
 *.htm
 *.txt
+pyproject.toml
+pyproject.toml
