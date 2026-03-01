@@ -13,16 +13,16 @@ def chat_fn(user_message, history):
 
 
 with gr.Blocks() as app:
-    gr.Markdown("#Python | Stocks | Tasks helper")
-    gr.Markdown("Ask about Python, stocks, or manage your tasks!")
+    gr.Markdown("🍋 LemonAI helper")
+    gr.Markdown("Ask about Fundamental Python, stocks (limited to AAPL, TSLA, MSFT, AMZN, GOOGL, META, NVDA, NFLX), or as a Task Manager!")
 
     chatbot = gr.Chatbot()
-    msg = gr.Textbox(placeholder="Type your message here...")
+    msg = gr.Textbox(label="How may I assist you?", placeholder="e.g.: explain inheritance in python.... or amazon stock insights.... or add/delete/view your tasks")
 
     state = gr.State([])
 
     msg.submit(chat_fn, [msg, state], [chatbot, state])
-    msg.submit(lambda: "", None, msg)  # clear input
+    msg.submit(lambda: "", None, msg)
 
 
 app.launch()

@@ -30,8 +30,9 @@ def route_input(user_input: str):
 
     # Route to services
     if "stock" in user_input_lower or "price" in user_input_lower:
-        symbol = user_input.upper().split()[-1]
-        stock = get_stock_data(symbol)
+        symbol = user_input.upper().split()[0]
+
+        stock = get_stock_data(extract_symbol(symbol))
         news = get_company_news(symbol)
         return generate_stock_insight(stock, news)
 
@@ -50,7 +51,23 @@ def extract_symbol(query: str):
 
     for word in words:
         if word.isalpha() and 1 <= len(word) <= 5:
-            return word
+            if word in ["AAPL", "TSLA", "MSFT", "AMZN", "GOOGL", "META", "NVDA", "NFLX"]:
+                return word
+
+        COMPANY_MAP = {
+        "apple": "AAPL",
+        "microsoft": "MSFT",
+        "tesla": "TSLA",
+        "amazon": "AMZN",
+        "google": "GOOGL",
+        "meta": "META",
+        "nvidia": "NVDA",
+        "netflix": "NFLX"
+    }
+
+    for name, symbol in COMPANY_MAP.items():
+        if name in str.lower(query):
+            return symbol
 
     return None
 
@@ -59,7 +76,6 @@ def extract_symbol(query: str):
 # Main loop
 # ---------------------------
 def main():
-    print("🚀 Simple Chat Router")
     print("Type 'exit' to quit\n")
 
     while True:
@@ -74,22 +90,17 @@ def main():
         # API SERVICE
         # -----------------------
         if route == "api":
-            print(query)
             symbol = extract_symbol(query)
 
             if not symbol:
-                print("⚠️ No stock symbol detected.")
+                print("No stock symbol detected.")
                 continue
 
-            print(symbol)
             stock = get_stock_data(symbol)
             news = get_company_news(symbol)
 
-            print(symbol)
-            print(news)
-
             if not stock:
-                print("❌ Failed to fetch stock data.")
+                print("Failed to fetch stock data.")
                 continue
 
             result = generate_stock_insight(stock, news)

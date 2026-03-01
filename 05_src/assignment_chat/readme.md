@@ -107,3 +107,11 @@ Prompt Protection:
 - For the setup to function `MARKETSTACK_API_KEY` and `NEWS_API_KEY` must be added to the `.secrets` file
 - Run `python semantic_service.py` to scrap data, generate embeddings, and stod to chromaDB
 - Launch app using `python app.py` and navigate in browser to `http://127.0.0.1:7860`
+
+#### Screens
+
+![Python Example](./images/python_example.png)
+
+![Stock Example](./images/stock_example.png)
+
+![Task Example](./images/task_example.png)

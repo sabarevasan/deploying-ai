@@ -1,9 +1,10 @@
 import os
+import httpx
 import requests
 from openai import OpenAI
 from dotenv import load_dotenv
 
-load_dotenv('../.secrets')
+load_dotenv('../../.secrets')
 
 # -----------------------------
 # CONFIG
@@ -14,13 +15,15 @@ NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 client_openai = OpenAI(
     base_url="https://k7uffyg03f.execute-api.us-east-1.amazonaws.com/prod/openai/v1",
     api_key="any-value",
-    default_headers={"x-api-key": os.getenv('API_GATEWAY_KEY')}
+    default_headers={"x-api-key": os.getenv("API_GATEWAY_KEY")},
+    http_client=httpx.Client()
 )
 
 # -----------------------------
 # SERVICE 1: STOCK DATA
 # -----------------------------
 def get_stock_data(symbol: str):
+
     url = "http://api.marketstack.com/v2/eod/latest"
 
     params = {
@@ -31,8 +34,6 @@ def get_stock_data(symbol: str):
 
     response = requests.get(url, params=params)
     data = response.json()
-
-    print(data)
 
     if "data" not in data or not data["data"]:
         return None
@@ -121,10 +122,10 @@ def generate_stock_insight(stock_data, news_articles):
 def get_stock_report(symbol: str, company_name: str):
     stock = get_stock_data(symbol)
     news = get_company_news(company_name)
-    insight = "Stock data unavailable from Nasdaq."
+    insight = "Stock data unavailable."
 
     if stock is None:
-        return "Stock data unavailable from Nasdaq. Try another symbol."
+        return "Stock data unavailable. Try another symbol."
     else:
         insight = generate_stock_insight(stock, news)
 
@@ -140,13 +141,4 @@ def get_stock_report(symbol: str, company_name: str):
 # -----------------------------
 if __name__ == "__main__":
     result = get_stock_report("AAPL", "Apple")
-
-    print("\n 📊 STOCK DATA:")
-    print(result["stock_data"])
-
-    print("\n 📰 NEWS:")
-    for n in result["news"]:
-        print("-", n["title"])
-
-    print("\n 🧠 INSIGHT:")
-    print(result["insight"])
+    print(result)
